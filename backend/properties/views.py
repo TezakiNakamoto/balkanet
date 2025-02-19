@@ -8,17 +8,17 @@ class PropertyViewSet(viewsets.ModelViewSet):
     serializer_class = PropertySerializer
 
     def create(self, request, *args, **kwargs):
-        # Copy the incoming data (excluding files)
         data = request.data.copy()
-        # Remove images from data, we'll handle them separately
+        # Remove the owner field if it exists (so it's not sent as an array or otherwise)
+        data.pop('owner', None)
+        
+        # Handle multiple images
         images = request.FILES.getlist('images')
-        data.pop('images', None)
         
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         property_instance = serializer.save(owner=request.user)
-
-        # Create a PropertyImage instance for each uploaded file
+        
         for img in images:
             PropertyImage.objects.create(property=property_instance, image=img)
         

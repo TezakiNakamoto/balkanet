@@ -54,17 +54,16 @@ const PropertyForm = () => {
       setError('You must be logged in to create a property.');
       return;
     }
-
-    // Create a FormData object
+  
     const formData = new FormData();
     Object.entries(propertyData).forEach(([key, value]) => {
       formData.append(key, value);
     });
-    // Append multiple images under the same key "images"
+    // Append images under the key 'images'
     images.forEach(file => {
       formData.append('images', file);
     });
-
+  
     axios.post('http://127.0.0.1:8000/api/properties/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

@@ -8,7 +8,9 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
 class PropertySerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
-    # main_image will be handled as a file field.
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Property
         fields = '__all__'
+
