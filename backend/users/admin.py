@@ -2,7 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
-@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_agent', 'is_staff', 'is_superuser')
-    search_fields = ('username', 'email')
+    # Extend the default fieldsets to include the is_agent field
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('is_agent',)}),
+    )
+    # Also add is_agent to list_display if you want to see it in the user list
+    list_display = UserAdmin.list_display + ('is_agent',)
+
+admin.site.register(CustomUser, CustomUserAdmin)
